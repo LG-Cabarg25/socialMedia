@@ -19,6 +19,7 @@ router.get('/:postId', auth, postsController.getPost);
 // Dar "me gusta" a una publicación
 router.post('/:id/like', auth, postsController.likePost);
 
+
 // Eliminar una publicación
 router.delete('/:postId', auth, postsController.deletePost);
 
