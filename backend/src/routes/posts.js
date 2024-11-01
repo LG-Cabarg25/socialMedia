@@ -19,6 +19,8 @@ router.get('/:postId', auth, postsController.getPost);
 // Dar "me gusta" a una publicación
 router.post('/:id/like', auth, postsController.likePost);
 
+// Obtener todos los comentarios de una publicación específica
+router.get('/:postId/comments', auth, postsController.getComments);
 
 // Eliminar una publicación
 router.delete('/:postId', auth, postsController.deletePost);

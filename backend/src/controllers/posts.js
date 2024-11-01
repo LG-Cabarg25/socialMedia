@@ -98,3 +98,18 @@ exports.deletePost = async (req, res) => {
     res.status(500).json({ error: 'Error deleting post' });
   }
 };
+
+
+// Controlador para obtener todos los comentarios de un post específico
+exports.getComments = async (req, res) => {
+  const { postId } = req.params;
+  try {
+    const comments = await db('comments')
+      .where({ post_id: postId })
+      .orderBy('created_at', 'asc');
+    res.json(comments);
+  } catch (error) {
+    console.error("Error retrieving comments:", error);
+    res.status(500).json({ error: 'Error retrieving comments' });
+  }
+};
