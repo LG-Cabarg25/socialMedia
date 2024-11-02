@@ -5,8 +5,8 @@ module.exports = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     if (!authHeader) return res.status(401).json({ error: 'Access denied' });
 
-    // En este caso, asumimos que `authHeader` es solo el token sin el prefijo
-    const token = authHeader;  // Ya no separamos 'Bearer' del token
+    // Verifica que el encabezado contenga el prefijo 'Bearer'
+    const token = authHeader.split(' ')[1]; // Divide el encabezado y toma solo el token
     if (!token) return res.status(401).json({ error: 'Access denied' });
 
     try {

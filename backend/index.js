@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors'); // Importa el paquete CORS
 const knex = require('./src/models/db'); // Conexión a la BD
 const usersRoutes = require('./src/routes/users');
 const postsRoutes = require('./src/routes/posts');
@@ -11,6 +12,7 @@ require('dotenv').config();
 const app = express();
 const PORT = 3000;
 
+app.use(cors({ origin: 'http://localhost:5173' })); // Habilita CORS para el frontend
 app.use(express.json());
 
 // Rutas
