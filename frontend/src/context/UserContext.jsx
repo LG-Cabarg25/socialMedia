@@ -20,18 +20,20 @@ export const UserProvider = ({ children }) => {
         } catch (error) {
           console.error('Error al obtener el perfil:', error);
           localStorage.removeItem('authToken'); // Limpia el token si hay error
+          setUser(null); // Limpia el usuario en el contexto
         }
       }
     };
     fetchUserProfile();
   }, []);
 
+  // Función para actualizar la foto de perfil del usuario
   const updateProfilePhoto = async (file) => {
     try {
       const data = await uploadProfilePhoto(file);
       setUser((prevUser) => ({
         ...prevUser,
-        photoUrl: data.photo_url,
+        photoUrl: data.photo_url, // Asegúrate de que `photo_url` es el campo correcto
       }));
     } catch (error) {
       console.error('Error al actualizar la foto de perfil:', error);

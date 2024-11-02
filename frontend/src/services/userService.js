@@ -15,7 +15,7 @@ export const uploadProfilePhoto = async (file) => {
     return response.data;
   } catch (error) {
     console.error('Error al subir la foto:', error);
-    throw error;
+    throw error; // Lanza el error para que el contexto pueda manejarlo
   }
 };
 
@@ -26,6 +26,6 @@ export const getUserProfile = async () => {
     return response.data;
   } catch (error) {
     console.error('Error al obtener el perfil del usuario:', error);
-    throw error;
+    throw error; // Lanza el error para permitir manejo en UserContext
   }
 };

@@ -6,16 +6,18 @@ const ProfilePage = () => {
   const { user } = useUser();
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Información del Perfil</h1>
-      {user && (
-        <div className="flex items-center space-x-6 mb-8">
-          <ProfilePhotoUploader />
-          <div className="text-left">
+      {user ? (
+        <div className="flex flex-row items-center space-x-8 mb-8"> {/* Configuración de flex-row */}
+          <ProfilePhotoUploader /> {/* Foto de perfil */}
+          <div className="text-left"> {/* Información del perfil */}
             <h2 className="text-2xl font-semibold text-gray-700">{user.username}</h2>
             <p className="text-gray-500">Email: {user.email}</p>
           </div>
         </div>
+      ) : (
+        <p className="text-center text-gray-500">Cargando perfil...</p>
       )}
 
       <div>

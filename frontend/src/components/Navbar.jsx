@@ -32,7 +32,6 @@ const Navbar = ({ onSectionChange, onLogout }) => {
   );
 };
 
-// Definición de las propiedades con PropTypes
 Navbar.propTypes = {
   onSectionChange: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired,
