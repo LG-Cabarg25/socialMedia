@@ -32,3 +32,35 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: 'Error logging in' });
   }
 };
+
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    // Obtener los datos básicos del usuario
+    const user = await db('users').where({ id: userId }).first();
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Obtener la foto de perfil del usuario
+    const profilePhoto = await db('user_photos')
+      .where({ user_id: userId, is_profile: true })
+      .first();
+
+    // Obtener los posts realizados por el usuario
+    const posts = await db('posts').where({ user_id: userId });
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      photoUrl: profilePhoto ? profilePhoto.photo_url : null,
+      posts,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching profile data' });
+  }
+};

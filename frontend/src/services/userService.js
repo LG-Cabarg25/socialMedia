@@ -1,19 +1,31 @@
-// src/services/userService.js (o donde prefieras definir tus servicios)
-import api from './api'; // Importa la instancia de API configurada con el token
+// src/services/userService.js
+import api from './api';
 
+// Función para subir la foto de perfil
 export const uploadProfilePhoto = async (file) => {
   const formData = new FormData();
-  formData.append('photo', file); // 'photo' es el nombre esperado en el backend
+  formData.append('photo', file);
 
   try {
     const response = await api.post('/user-photos/upload', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data', // Especifica el tipo de contenido para archivos
+        'Content-Type': 'multipart/form-data',
       },
     });
-    return response.data; // Devuelve la respuesta del backend
+    return response.data;
   } catch (error) {
     console.error('Error al subir la foto:', error);
+    throw error;
+  }
+};
+
+// Función para obtener el perfil del usuario
+export const getUserProfile = async () => {
+  try {
+    const response = await api.get('/users/profile');
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener el perfil del usuario:', error);
     throw error;
   }
 };

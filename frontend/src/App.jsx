@@ -1,14 +1,17 @@
-// App.jsx
+// src/App.js
 import { BrowserRouter as Router } from 'react-router-dom';
-import AuthProvider from './context/AuthProvider'; // Asegúrate de que este sea el import correcto
 import AppRoutes from './routes/AppRoutes';
+import AuthProvider from './context/AuthProvider';
+import { UserProvider } from './context/UserContext'; // Importa el contexto de usuario
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <UserProvider> {/* Envuelve la aplicación con UserProvider */}
+        <Router>
+          <AppRoutes />
+        </Router>
+      </UserProvider>
     </AuthProvider>
   );
 }
