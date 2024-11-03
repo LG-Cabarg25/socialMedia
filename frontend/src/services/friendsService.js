@@ -24,3 +24,13 @@ export const deleteFriendRequest = async (friendId) => {
   const response = await api.delete(`/friends/${friendId}`);
   return response.data;
 };
+
+export const getFriends = async () => {
+  try {
+    const response = await api.get('/friends'); // Realiza una solicitud GET al endpoint de amigos aceptados
+    return response.data; // Devuelve los datos de amigos aceptados
+  } catch (error) {
+    console.error('Error al obtener amigos:', error);
+    return [];
+  }
+};

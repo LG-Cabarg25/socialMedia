@@ -1,26 +1,31 @@
-// controllers/userPhotos.js
-const db = require('../models/db');
+
+const db = require('../models/db'); // Verifica que esta línea esté presente y correcta
 
 exports.uploadPhoto = async (req, res) => {
   try {
-    const userId = req.user.userId; // Tomamos el ID del usuario autenticado
-    const photoUrl = req.file.filename; // Guardamos el nombre del archivo
+    const userId = req.user.userId;
+    const { avatarUrl } = req.body;
 
-    // Insertamos la nueva foto en la tabla user_photos
+    console.log("Avatar URL recibido:", avatarUrl); // Agrega este log
+
+    if (!avatarUrl) {
+      return res.status(400).json({ error: 'No avatar URL provided' });
+    }
+
     await db('user_photos').insert({
       user_id: userId,
-      photo_url: photoUrl,
+      photo_url: avatarUrl,
       is_profile: true,
     });
 
-    // Actualizamos todas las fotos anteriores para que no sean foto de perfil
     await db('user_photos')
       .where({ user_id: userId })
-      .andWhereNot('photo_url', photoUrl)
+      .andWhereNot('photo_url', avatarUrl)
       .update({ is_profile: false });
 
-    res.status(201).json({ message: 'Photo uploaded successfully', photo_url: photoUrl });
+    res.status(201).json({ message: 'Avatar URL saved successfully', photo_url: avatarUrl });
   } catch (error) {
-    res.status(500).json({ error: 'Error uploading photo' });
+    console.error('Error saving avatar URL:', error);
+    res.status(500).json({ error: 'Error saving avatar URL' });
   }
 };

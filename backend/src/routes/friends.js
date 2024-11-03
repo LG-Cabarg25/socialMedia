@@ -9,6 +9,8 @@ router.post('/request', auth, friendsController.sendFriendRequest);
 // Aceptar solicitud de amistad
 router.put('/accept/:friendId', auth, friendsController.acceptFriendRequest);
 
+// Obtener amigos aceptados
+router.get('/', auth, friendsController.getFriends);
 
 // Obtener solicitudes de amistad pendientes
 router.get('/requests', auth, friendsController.getFriendRequests);

@@ -62,3 +62,28 @@ exports.deleteFriendRequest = async (req, res) => {
       res.status(500).json({ error: 'Failed to delete friend request or friendship' });
   }
 };
+
+// Controlador para obtener amigos aceptados
+exports.getFriends = async (req, res) => {
+  const userId = req.user.userId;
+
+  try {
+    const friends = await db('friends')
+      .join('users', function() {
+        this.on('friends.user_id', '=', 'users.id')
+          .orOn('friends.friend_id', '=', 'users.id');
+      })
+      .where(function() {
+        this.where('friends.user_id', userId)
+          .orWhere('friends.friend_id', userId);
+      })
+      .andWhere('status', 'accepted')
+      .andWhereNot('users.id', userId) // Excluye al propio usuario
+      .select('users.id as friendId', 'users.username'); // Selecciona el id y el nombre de usuario del amigo
+
+    res.status(200).json(friends);
+  } catch (error) {
+    console.error('Error retrieving friends:', error);
+    res.status(500).json({ error: 'Failed to retrieve friends' });
+  }
+};
