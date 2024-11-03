@@ -1,3 +1,4 @@
+// src/services/postService.js
 import api from './api';
 
 // Obtener todas las publicaciones
@@ -33,5 +34,32 @@ export const likePost = async (id) => {
 // Eliminar una publicación
 export const deletePost = async (postId) => {
   const response = await api.delete(`/posts/${postId}`);
+  return response.data;
+};
+
+// **Nueva función**: Obtener publicaciones de un usuario específico
+export const fetchUserPosts = async (userId) => {
+  const response = await api.get(`/posts/user/${userId}`);
+  return response.data;
+};
+
+
+// Crear un comentario
+export const createComment = async (postId, content) => {
+  const response = await api.post('/comments', { postId, content });
+  return response.data;
+};
+
+// Obtener todos los comentarios de un post
+export const fetchComments = async (postId) => {
+  const response = await api.get(`/comments`, {
+    params: { postId }, // Usa params para pasar postId como query parameter
+  });
+  return response.data;
+};
+
+// Eliminar un comentario
+export const deleteComment = async (commentId) => {
+  const response = await api.delete(`/comments/${commentId}`);
   return response.data;
 };

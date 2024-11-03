@@ -26,19 +26,20 @@ exports.createComment = async (req, res) => {
 
 // Obtener todos los comentarios de un post
 exports.getComments = async (req, res) => {
-  const { postId } = req.params;
+  const { postId } = req.query; // Usando query en lugar de params para evitar errores de ruta
 
   try {
     const comments = await db('comments')
+      .join('users', 'comments.user_id', 'users.id') // Unir con la tabla de usuarios
       .where({ post_id: postId })
-      .orderBy('created_at', 'asc');
+      .select('comments.*', 'users.username') // Seleccionar comentarios y nombre de usuario
+      .orderBy('comments.created_at', 'asc');
     res.json(comments);
   } catch (error) {
-    console.error("Error retrieving comments:", error);
+    console.error("Error retrieving comments:", error); // Log detallado del error
     res.status(500).json({ error: 'Error retrieving comments' });
   }
 };
-
 
 
 // Eliminar un comentario

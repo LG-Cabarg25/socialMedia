@@ -1,3 +1,4 @@
+// routes/posts.js
 const express = require('express');
 const router = express.Router();
 const postsController = require('../controllers/posts');
@@ -15,6 +16,9 @@ router.get('/', auth, postsController.getPosts);
 
 // Obtener una publicación específica
 router.get('/:postId', auth, postsController.getPost);
+
+// **Nueva ruta**: Obtener las publicaciones de un usuario específico
+router.get('/user/:userId', auth, postsController.getUserPosts);
 
 // Dar "me gusta" a una publicación
 router.post('/:id/like', auth, postsController.likePost);

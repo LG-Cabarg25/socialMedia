@@ -51,14 +51,17 @@
   exports.getPosts = async (req, res) => {
     try {
       const posts = await db('posts')
-        .select('*')
-        .orderBy('created_at', 'desc');
-      res.json(posts);
+        .join('users', 'posts.user_id', 'users.id')
+        .select('posts.*', 'users.username as username') // Agrega el nombre del usuario a la selección
+        .orderBy('posts.created_at', 'desc');
+        
+      res.json(posts); // Devuelve los posts con el campo 'username'
     } catch (error) {
       console.error("Error retrieving posts:", error);
       res.status(500).json({ error: 'Error retrieving posts' });
     }
   };
+  
 
   // Obtener una publicación específica
   exports.getPost = async (req, res) => {
@@ -119,5 +122,22 @@ exports.getComments = async (req, res) => {
   } catch (error) {
     console.error("Error retrieving comments:", error);
     res.status(500).json({ error: 'Error retrieving comments' });
+  }
+};
+
+
+exports.getUserPosts = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const posts = await db('posts')
+      .join('users', 'posts.user_id', 'users.id')
+      .select('posts.*', 'users.username as username')
+      .where('posts.user_id', userId)
+      .orderBy('posts.created_at', 'desc');
+
+    res.json(posts);
+  } catch (error) {
+    console.error("Error retrieving user's posts:", error);
+    res.status(500).json({ error: 'Error retrieving user posts' });
   }
 };
