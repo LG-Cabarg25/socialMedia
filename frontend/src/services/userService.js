@@ -20,13 +20,13 @@ export const uploadProfilePhoto = async (file) => {
 };
 
 // Función para obtener el perfil del usuario
-export const getUserProfile = async (userId) => {
+export const getUserProfile = async () => {
   try {
-    const response = await api.get(`/users/profile/${userId}`);
+    const response = await api.get('/users/profile'); // Asegúrate de no usar `userId`
     return response.data;
   } catch (error) {
-    console.error("Error obteniendo el perfil del usuario:", error);
-    return null;
+    console.error('Error obteniendo el perfil del usuario:', error);
+    throw error;
   }
 };
 
