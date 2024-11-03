@@ -5,11 +5,13 @@ const path = require('path');
 // Configuración de almacenamiento
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log("Estableciendo carpeta de destino para los archivos en 'uploads/'"); // Mensaje de depuración
     cb(null, 'uploads/'); // Directorio donde se guardarán los archivos
   },
   filename: (req, file, cb) => {
-    // Configura el nombre del archivo
-    cb(null, `${Date.now()}-${file.originalname}`);
+    const filename = `${Date.now()}-${file.originalname}`;
+    console.log("Configurando nombre de archivo:", filename); // Mensaje de depuración
+    cb(null, filename);
   },
 });
 

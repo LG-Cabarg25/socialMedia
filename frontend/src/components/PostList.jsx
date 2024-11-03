@@ -1,3 +1,4 @@
+// src/components/PostList.jsx
 import { usePosts } from '../context/PostContext';
 import { useState } from 'react';
 import { FaEllipsisH, FaThumbsUp, FaCommentAlt, FaShare } from 'react-icons/fa';
@@ -16,7 +17,7 @@ const PostList = () => {
         <div key={post.id} className="bg-white rounded-lg shadow-md border border-gray-200 p-4 relative">
           {/* Header de la publicación */}
           <div className="flex justify-between items-center">
-            <div className="text-gray-700 font-semibold">Usuario {post.user_id}</div>
+            <div className="text-gray-700 font-semibold">{post.username}</div> {/* Muestra el nombre de usuario */}
             <button
               onClick={() => toggleOptions(post.id)}
               className="text-gray-400 hover:text-gray-600 focus:outline-none"

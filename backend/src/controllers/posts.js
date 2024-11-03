@@ -18,26 +18,34 @@
     }
   };
 
-  // Crear un post con imagen
   exports.createImagePost = async (req, res) => {
     try {
+      if (!req.file) {
+        console.log("Error: No se subió ningún archivo."); // Depuración
+        return res.status(400).json({ error: 'No image file uploaded' });
+      }
+  
+      console.log("Archivo subido exitosamente:", req.file); // Depuración
+  
       const imagePath = req.file.path;
       const { content } = req.body;
-
+  
       const [postId] = await db('posts')
         .insert({
           user_id: req.user.userId,
           content,
           image_url: imagePath,
-          post_type: 'image', 
+          post_type: 'image',
         })
         .returning('id');
+  
       res.status(201).json({ message: 'Image post created successfully', postId });
     } catch (error) {
-      console.error("Error inserting image post:", error);
+      console.error("Error creando el post de imagen:", error);
       res.status(500).json({ error: 'Error creating image post' });
     }
   };
+  
 
   // Obtener todas las publicaciones
   exports.getPosts = async (req, res) => {
