@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useUser } from '../context/UserContext';
+
 import ProfilePhotoUploader from '../components/ProfilePhotoUploader';
 import { fetchUserPosts } from '../services/postService'; // Asegúrate de importar el servicio
 import { getUserProfile } from '../services/userService';
 
 const ProfilePage = () => {
-  const { user } = useUser();
+ 
   const [userProfile, setUserProfile] = useState(null);
   const [userPosts, setUserPosts] = useState([]); // Estado para almacenar las publicaciones del usuario
 

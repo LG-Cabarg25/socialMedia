@@ -1,4 +1,3 @@
-// src/components/FriendRequests.jsx
 import { useEffect, useState } from 'react';
 import {
   acceptFriendRequest,
@@ -6,10 +5,14 @@ import {
   deleteFriendRequest,
   getFriends
 } from '../services/friendsService';
+import { FaEllipsisV } from 'react-icons/fa';
 
 const FriendRequests = () => {
   const [requests, setRequests] = useState([]);
-  const [friends, setFriends] = useState([]); 
+  const [friends, setFriends] = useState([]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [friendToDelete, setFriendToDelete] = useState(null);
+  const [showOptions, setShowOptions] = useState(null); // Track the friend with options open
 
   useEffect(() => {
     const loadRequests = async () => {
@@ -39,6 +42,21 @@ const FriendRequests = () => {
     await deleteFriendRequest(friendId);
     const updatedRequests = await getFriendRequests();
     setRequests(updatedRequests);
+  };
+
+  const confirmDeleteFriend = (friend) => {
+    setFriendToDelete(friend);
+    setShowConfirmModal(true);
+  };
+
+  const handleDeleteFriend = async () => {
+    if (friendToDelete) {
+      await deleteFriendRequest(friendToDelete.friendId);
+      const updatedFriends = await getFriends();
+      setFriends(updatedFriends);
+      setShowConfirmModal(false);
+      setFriendToDelete(null);
+    }
   };
 
   return (
@@ -76,7 +94,7 @@ const FriendRequests = () => {
       {friends.length > 0 ? (
         <div className="grid grid-cols-3 gap-6">
           {friends.map((friend) => (
-            <div key={friend.friendId} className="flex flex-col items-center space-y-2">
+            <div key={friend.friendId} className="relative flex flex-col items-center space-y-2">
               {/* Avatar circular */}
               <div className="w-20 h-20 bg-blue-200 rounded-full flex items-center justify-center overflow-hidden shadow-lg">
                 <img
@@ -85,13 +103,63 @@ const FriendRequests = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              {/* Nombre del amigo */}
-              <span className="text-gray-700 font-medium">{friend.username}</span>
+
+              {/* Nombre del amigo y menú de opciones */}
+              <div className="flex items-center space-x-2">
+                <span className="text-gray-700 font-medium">{friend.username}</span>
+                <div className="relative">
+                  {/* Tres puntos verticales */}
+                  <button
+                    onClick={() => setShowOptions(showOptions === friend.friendId ? null : friend.friendId)}
+                    className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    <FaEllipsisV />
+                  </button>
+                  
+                  {/* Menú de opciones */}
+                  {showOptions === friend.friendId && (
+                    <div className="absolute top-8 right-0 w-32 bg-white shadow-lg rounded-md text-gray-700 text-sm z-10">
+                      <button
+                        onClick={() => confirmDeleteFriend(friend)}
+                        className="block w-full text-left px-4 py-2 hover:bg-red-100"
+                      >
+                        Eliminar amigo
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           ))}
         </div>
       ) : (
         <p className="text-gray-600">Aún no tienes amigos.</p>
+      )}
+
+      {/* Modal de confirmación para eliminar amigo */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
+            <h2 className="text-xl font-semibold mb-4">¿Eliminar amigo?</h2>
+            <p className="text-gray-600 mb-6">
+              ¿Estás seguro de que deseas eliminar a <strong>{friendToDelete?.username}</strong> de tus amigos?
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={handleDeleteFriend}
+                className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-colors"
+              >
+                Eliminar
+              </button>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-400 transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

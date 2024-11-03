@@ -73,13 +73,21 @@ exports.getFriends = async (req, res) => {
         this.on('friends.user_id', '=', 'users.id')
           .orOn('friends.friend_id', '=', 'users.id');
       })
+      .leftJoin('user_photos', function() {
+        this.on('user_photos.user_id', '=', 'users.id')
+          .andOn('user_photos.is_profile', '=', db.raw('?', [true]));
+      })
       .where(function() {
         this.where('friends.user_id', userId)
           .orWhere('friends.friend_id', userId);
       })
-      .andWhere('status', 'accepted')
+      .andWhere('friends.status', 'accepted')
       .andWhereNot('users.id', userId) // Excluye al propio usuario
-      .select('users.id as friendId', 'users.username'); // Selecciona el id y el nombre de usuario del amigo
+      .select(
+        'users.id as friendId', 
+        'users.username', 
+        'user_photos.photo_url as avatarUrl' // Selecciona la URL del avatar
+      );
 
     res.status(200).json(friends);
   } catch (error) {

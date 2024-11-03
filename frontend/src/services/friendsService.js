@@ -25,12 +25,13 @@ export const deleteFriendRequest = async (friendId) => {
   return response.data;
 };
 
+// Obtener lista de amigos aceptados
 export const getFriends = async () => {
   try {
-    const response = await api.get('/friends'); // Realiza una solicitud GET al endpoint de amigos aceptados
-    return response.data; // Devuelve los datos de amigos aceptados
+    const response = await api.get('/friends'); // Endpoint que devuelve amigos con `avatarUrl` y `username`
+    return response.data;
   } catch (error) {
-    console.error('Error al obtener amigos:', error);
+    console.error('Error obteniendo amigos:', error);
     return [];
   }
 };
