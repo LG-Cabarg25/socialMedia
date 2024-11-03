@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import ProfilePage from './Profile';
 import PostForm from '../components/PostForm.jsx';
 import PostList from '../components/PostList.jsx';
+import FriendRequests from '../components/FriendRequests.jsx';
 
 const Dashboard = () => {
   const [currentSection, setCurrentSection] = useState('publicaciones');
@@ -16,7 +17,7 @@ const Dashboard = () => {
         return (
           <section className="p-8">
             <h2 className="text-3xl font-semibold text-gray-800">Amigos</h2>
-            <p className="mt-4 text-gray-600">Aquí puedes ver solicitudes de amistad y tu lista de amigos.</p>
+            <FriendRequests /> {/* Componente FriendRequests para solicitudes de amistad */}
           </section>
         );
       case 'perfil':
@@ -37,7 +38,6 @@ const Dashboard = () => {
               <PostForm />
               <PostList />
             </div>
-            {/* Configuración para que el aside permanezca fijo al hacer scroll */}
             <aside className="w-1/3 p-4 bg-white rounded-lg shadow-md max-h-[600px] overflow-y-auto sticky top-8">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Mensajes</h3>
               <p className="text-gray-600">Aquí estarán tus mensajes y notificaciones.</p>

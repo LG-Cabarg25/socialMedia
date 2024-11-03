@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import ConfirmationModal from '../components/ConfirmationModal'; // Importa el modal
 
 const RegisterPage = () => {
   const { register } = useAuth();
@@ -10,34 +9,27 @@ const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para mostrar el modal
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     try {
       await register(username, email, password);
-      setIsModalOpen(false); // Cierra el modal
-      navigate('/login'); // Redirige al login después del registro
+      navigate('/dashboard'); // Redirige al dashboard o a la página deseada
     } catch (error) {
       console.error("Error en el registro:", error);
     }
   };
 
-  const handleOpenModal = (e) => {
-    e.preventDefault();
-    setIsModalOpen(true); // Abre el modal de confirmación
-  };
-
   return (
     <div className="flex items-center justify-center h-screen bg-aurora relative overflow-hidden">
       <div className="relative z-10 flex items-center w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden">
-        
         <div className="w-full lg:w-1/2 p-10 lg:p-20 bg-white flex flex-col items-center">
           <div className="text-center mb-8">
             <h2 className="text-6xl font-bold text-blue-600">AMIXTER</h2>
             <p className="text-3xl font-semibold text-gray-700">Crear Cuenta</p>
           </div>
 
-          <form onSubmit={handleOpenModal} className="w-full space-y-6">
+          <form onSubmit={handleRegister} className="w-full space-y-6">
             <div>
               <label className="block text-lg font-medium text-gray-600">Nombre Completo</label>
               <input
@@ -93,13 +85,6 @@ const RegisterPage = () => {
           </p>
         </div>
       </div>
-
-      {/* Modal de confirmación */}
-      <ConfirmationModal
-        isOpen={isModalOpen}
-        onConfirm={handleRegister} // Ejecuta el registro al confirmar
-        onCancel={() => setIsModalOpen(false)} // Cierra el modal al cancelar
-      />
     </div>
   );
 };

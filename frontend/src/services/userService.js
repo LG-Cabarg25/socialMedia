@@ -20,12 +20,31 @@ export const uploadProfilePhoto = async (file) => {
 };
 
 // Función para obtener el perfil del usuario
-export const getUserProfile = async () => {
+export const getUserProfile = async (userId) => {
   try {
-    const response = await api.get('/users/profile');
+    const response = await api.get(`/users/profile/${userId}`);
     return response.data;
   } catch (error) {
-    console.error('Error al obtener el perfil del usuario:', error);
-    throw error; // Lanza el error para permitir manejo en UserContext
+    console.error("Error obteniendo el perfil del usuario:", error);
+    return null;
+  }
+};
+
+export const searchUsers = async (query) => {
+  try {
+    const response = await api.get(`/users/search?query=${query}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error buscando usuarios:', error);
+    return [];
+  }
+};
+
+
+export const sendFriendRequest = async (friendId) => {
+  try {
+    await api.post('/friends/request', { friendId });
+  } catch (error) {
+    console.error('Error enviando solicitud de amistad:', error);
   }
 };

@@ -64,3 +64,43 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ error: 'Error fetching profile data' });
   }
 };
+
+exports.searchUsers = async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    const users = await db('users')
+      .where('username', 'like', `%${query}%`)
+      .select('id', 'username'); // Selecciona solo los campos necesarios
+    res.json(users);
+  } catch (error) {
+    console.error('Error buscando usuarios:', error);
+    res.status(500).json({ error: 'Error buscando usuarios' });
+  }
+};
+
+exports.getUserProfileById = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await db('users').where({ id: userId }).first();
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const profilePhoto = await db('user_photos').where({ user_id: userId, is_profile: true }).first();
+    const posts = await db('posts').where({ user_id: userId });
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      photoUrl: profilePhoto ? profilePhoto.photo_url : null,
+      posts,
+    });
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ error: 'Error fetching user profile' });
+  }
+};

@@ -1,37 +1,33 @@
-// src/components/ConfirmationModal.jsx
+// src/components/FriendRequestModal.jsx
+
 import PropTypes from 'prop-types';
 
-const ConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
-  if (!isOpen) return null;
+const FriendRequestModal = ({ user, onClose }) => {
+  if (!user) return null; // Evita cargar el modal si no hay usuario definido
+
+  const handleSendRequest = () => {
+    // Lógica para enviar solicitud de amistad
+    console.log(`Solicitud enviada a ${user.username}`);
+    onClose();
+  };
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Confirmación</h2>
-        <p className="text-gray-600 mb-6">¿Estás seguro de que quieres registrarte?</p>
-        <div className="flex justify-end space-x-4">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-          >
-            Confirmar
-          </button>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-bold">Enviar solicitud de amistad</h2>
+        <p>¿Deseas enviar una solicitud de amistad a {user.username}?</p>
+        <div className="mt-4 flex space-x-4">
+          <button onClick={handleSendRequest} className="bg-blue-500 text-white px-4 py-2 rounded-md">Enviar</button>
+          <button onClick={onClose} className="bg-gray-300 px-4 py-2 rounded-md">Cancelar</button>
         </div>
       </div>
     </div>
   );
 };
 
-ConfirmationModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onConfirm: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
+FriendRequestModal.propTypes = {
+  user: PropTypes.object,
+  onClose: PropTypes.func.isRequired,
 };
 
-export default ConfirmationModal;
+export default FriendRequestModal;

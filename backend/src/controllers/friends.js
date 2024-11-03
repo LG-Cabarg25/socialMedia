@@ -22,18 +22,23 @@ exports.acceptFriendRequest = async (req, res) => {
   }
 };
 
+// Controlador de solicitudes de amistad
 exports.getFriendRequests = async (req, res) => {
   const userId = req.user.userId;
+
   try {
     const requests = await db('friends')
+      .join('users', 'friends.user_id', 'users.id') // Realiza la unión con la tabla de usuarios
       .where({ friend_id: userId, status: 'pending' })
-      .select('user_id as requesterId', 'status', 'created_at as requestedAt');
+      .select('users.id as requesterId', 'users.username', 'friends.created_at as requestedAt'); // Selecciona `username`
+
     res.status(200).json(requests);
   } catch (error) {
     console.error('Error retrieving friend requests:', error);
     res.status(500).json({ error: 'Failed to retrieve friend requests' });
   }
 };
+
 
 exports.deleteFriendRequest = async (req, res) => {
   const { friendId } = req.params;
