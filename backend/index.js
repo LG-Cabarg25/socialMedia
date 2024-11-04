@@ -7,17 +7,40 @@ const friendsRoutes = require('./src/routes/friends');
 const messagesRoutes = require('./src/routes/messages');
 const userPhotosRoutes = require('./src/routes/userPhotos');
 const commentsRoutes = require('./src/routes/comments');
-const path = require('path'); // Importa 'path' para archivos estáticos
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
+const http = require('http'); // Requerimos 'http' para combinar con Socket.IO
+const { Server } = require('socket.io'); // Requerimos el servidor de Socket.IO
 const PORT = 3000;
 
-app.use(cors({ origin: 'http://localhost:5173' })); // Habilita CORS para el frontend
+// Configuración de CORS
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 
-// Configura la carpeta de archivos estáticos para servir las imágenes
+// Configuración de archivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Configuración de WebSocket
+const server = http.createServer(app); // Crear servidor HTTP usando Express
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173', // El frontend
+    methods: ['GET', 'POST'], // Métodos permitidos
+  },
+});
+
+app.set('socketio', io); // Guardar la instancia de Socket.IO para usarla en los controladores
+
+io.on('connection', (socket) => {
+  console.log('Nuevo cliente conectado:', socket.id);
+
+  // Evento de desconexión
+  socket.on('disconnect', () => {
+    console.log('Cliente desconectado:', socket.id);
+  });
+});
 
 // Rutas
 app.use('/api/users', usersRoutes);
@@ -27,7 +50,8 @@ app.use('/api/messages', messagesRoutes);
 app.use('/api/user-photos', userPhotosRoutes);
 app.use('/api/comments', commentsRoutes);
 
-app.listen(PORT, () => {
+// Iniciar el servidor en el puerto especificado
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
